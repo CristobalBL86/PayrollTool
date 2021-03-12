@@ -1,0 +1,56 @@
+﻿@model IEnumerable<PayrollTool.Models.TransactionLog>
+
+
+    <div class="col-md-8 offset-md-2">
+
+        <h1 class="text-center"><i class="fas fa-comments-dollar text-success"></i> Transaction History</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BoxQty)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Operation)
+                    </th>
+                    <th>
+                        <a onclick="showPopUp('@Url.Action("AddOrEdit","TransactionLog", null, Context.Request.Scheme)','New Transaction')" class="btn btn-success text-white"><i class="fas fa-random"></i> Add transaction</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BoxQty)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Operation.OperationName)
+                        </td>
+                        <td>
+                            <a onclick="showPopUp('@Url.Action("AddOrEdit","TransactionLog", new { id = item.TransactionLogId }, Context.Request.Scheme)','Edit Transaction')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                            <form asp-action="Delete" asp-route-id="@item.TransactionLogId" onsubmit="return deleteRecord(this)" class="d-inline">
+                                <input type="hidden" asp-for="@item.TransactionLogId" />
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>

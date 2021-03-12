@@ -1,0 +1,40 @@
+﻿@model IEnumerable<PayrollTool.Models.PayrollRelease>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Ammount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Employee)
+                    </th>
+                    <th>
+                        <a id="btnRelease" asp-action="GetReport" asp-route-stDate="@ViewBag.stDate" asp-route-edDate="@ViewBag.edDate" onclick="cleanScreen()" style="display:none"><i class="fas fa-file-export btn-success"></i> Release</a>
+                        @*<a id="btnRelease" onclick="getXLS('@Url.Action("GetReport","PayrollRelease")','@Url.Action("completeDownload","PayrollRelease")')" class="btn btn-success text-white"><i class="fas fa-file-export"></i> Release</a>*@
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ammount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Employee.Name)
+                        </td>
+                        <td>
+                            <a onclick="showPopPayroll('@Url.Action("Edit","PayrollRelease", new { id = item.PayrollReleaseId }, Context.Request.Scheme)','Edit')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>

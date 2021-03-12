@@ -1,0 +1,49 @@
+﻿@model IEnumerable<PayrollTool.Models.PayrollRelease>
+
+@{
+    ViewBag.Title = "Payroll";
+}
+
+<h1 class="text-center"><i class="fas fa-money-bill-alt text-success"></i> Payroll Calculation</h1>
+@*<div class="col-md-8 offset-md-2">*@
+<div class="col-md-8 offset-md-2">
+    <div class="col-md-12">
+        @await Html.PartialAsync("Calculate", new DateRange()
+        {
+            startDate = DateTime.Today.AddDays(-6).Date,
+            endDate = DateTime.Today.Date
+        })
+    </div>
+    <div id="view-payroll">
+        @await Html.PartialAsync("_ViewPayroll", Model)
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="pop_payroll">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="row">
+        <label for="txtWeek" class="control-label"># Semana: </label>
+        <input type="text" id="txtWeek" class="form-control" maxlength="2" autofocus />
+        <br />
+        <input type="submit" class="btn btn-primary" id="btnReport" value="Reporte" />
+    </div>*@
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
