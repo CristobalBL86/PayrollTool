@@ -21,12 +21,12 @@ namespace PayrollTool.Controllers
             _context = context;
         }
 
-        // GET: TransactionLog
+        [NoDirectAccessAttribute]
         public async Task<IActionResult> Index()
         {
             var payrollContext = _context.TransacionLog
                 .Include(t => t.Operation).Include(t => t.Product)
-                .Where(t=> t.Date.Date == DateTime.Today);
+                .Where(t=> t.Date.Date >= DateTime.Today.AddDays(-14));
             return View(await payrollContext.ToListAsync());
         }
 
@@ -76,42 +76,58 @@ namespace PayrollTool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOrEdit(int id, [Bind("TransactionLogId,Date,ProductId,OperationId,BoxQty")] TransactionLog transactionLog)
         {
-            if (ModelState.IsValid)
+            TransactionLog exObj = new TransactionLog();
+            try
             {
-                if (id == 0)
+                if (ModelState.IsValid)
                 {
-                    //transactionLog.Date = DateTime.Now;
-                    _context.Add(transactionLog);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    try
+                    transactionLog.Date = transactionLog.Date.Date;
+                    exObj = transactionLog;
+
+                    if (id == 0)
                     {
-                        _context.Update(transactionLog);
+                        _context.Add(transactionLog);
                         await _context.SaveChangesAsync();
                     }
-                    catch (DbUpdateConcurrencyException)
+                    else
                     {
-                        if (!TransactionLogExists(transactionLog.TransactionLogId))
+                        try
                         {
-                            return NotFound();
+                            _context.Update(transactionLog);
+                            await _context.SaveChangesAsync();
                         }
-                        else
+                        catch (DbUpdateConcurrencyException)
                         {
-                            throw;
+                            if (!TransactionLogExists(transactionLog.TransactionLogId))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
                         }
-                    }                    
+                    }
+
+                    return Json(new
+                    {
+                        isValid = true,
+                        html = Helper.RenderRazorViewToString(this, "_ViewAll",
+                        _context.TransacionLog.Include(t => t.Operation).Include(t => t.Product)
+                        .Where(t => t.Date.Date >=  DateTime.Today.AddDays(-14)).ToList())
+                    });
                 }
+                ViewData["OperationId"] = new SelectList(_context.Operation, "OperationId", "OperationName", transactionLog.OperationId);
+                ViewData["ProductId"] = new SelectList(_context.Product, "ProductId", "ProductName", transactionLog.ProductId);
 
-                return Json(new { isValid = true, html = Helper.RenderRazorViewToString(this, "_ViewAll", 
-                    _context.TransacionLog.Include(t => t.Operation).Include(t => t.Product)
-                    .Where(t => t.Date.Date == DateTime.Today).ToList()) });
+                return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", transactionLog) });
             }
-            ViewData["OperationId"] = new SelectList(_context.Operation, "OperationId", "OperationName", transactionLog.OperationId);
-            ViewData["ProductId"] = new SelectList(_context.Product, "ProductId", "ProductName", transactionLog.ProductId);
-
-            return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", transactionLog) });
+            catch (Exception ex) {
+                ViewBag.ErrorMessage = ex.InnerException.Message.ToString();
+                ViewData["OperationId"] = new SelectList(_context.Operation, "OperationId", "OperationName", exObj.OperationId);
+                ViewData["ProductId"] = new SelectList(_context.Product, "ProductId", "ProductName", exObj.ProductId);
+                return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", exObj) });
+            }
         }
 
         // GET: TransactionLog/Delete/5

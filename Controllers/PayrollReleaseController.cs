@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
 using PayrollTool.Context;
 using PayrollTool.Models;
+using static PayrollTool.Helper;
 
 namespace PayrollTool.Controllers
 {
@@ -28,6 +29,7 @@ namespace PayrollTool.Controllers
         }
 
         // GET: PayrollReleases
+        [NoDirectAccessAttribute]
         public async Task<IActionResult> Index()
         {
             var list = new List<PayrollRelease>();

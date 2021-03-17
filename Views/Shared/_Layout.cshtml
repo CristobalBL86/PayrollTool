@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,13 +28,13 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="AssistanceLog" asp-action="Index">Assistance</a>
+                            <a id="mnuAssitance" class="nav-link text-white" asp-area="" asp-controller="AssistanceLog" asp-action="Index" hidden="hidden">Assistance</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="TransactionLog" asp-action="Index">Daily Transactions</a>
+                            <a id="mnuTrx" class="nav-link text-white" asp-area="" asp-controller="TransactionLog" asp-action="Index" hidden="hidden">Daily Transactions</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="PayrollRelease" asp-action="Index">Payroll Calculation</a>
+                            <a id="mnuPayroll" class="nav-link text-white" asp-area="" asp-controller="PayrollRelease" asp-action="Index" hidden="hidden">Payroll Calculation</a>
                         </li>
                     </ul>
                 </div>
@@ -47,20 +49,20 @@
 
     @*POPUP PARA AGREGAR/EDITAR*@
     @*<div class="modal" tabindex="-1" role="dialog" id="pop_addedit">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
 
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>*@
+        </div>*@
 
     @*<div class="loaderbody" id="loaderbody">
             <div class="loader"></div>

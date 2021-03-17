@@ -17,5 +17,16 @@ namespace PayrollTool.Context
         public DbSet<TransactionLog> TransacionLog { get; set; }
         public DbSet<AssistanceLog> AssistanceLog { get; set; }
         public DbSet<PayrollRelease> PayrollRelease { get; set; }
+        public DbSet<User> User { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder) {
+            builder.Entity<AssistanceLog>()
+                .HasIndex(i => new { i.Date, i.EmployeeId })
+                .IsUnique(true);
+
+            builder.Entity<TransactionLog>()
+                .HasIndex(i => new { i.Date, i.OperationId, i.ProductId })
+                .IsUnique(true);
+        }
     }
 }

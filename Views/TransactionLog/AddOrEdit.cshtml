@@ -2,6 +2,10 @@
 
 @{
     Layout = null;
+
+    if (@ViewBag.ErrorMessage != null) { 
+        <a style="color:red">@ViewBag.ErrorMessage</a>
+    }
 }
 
 <div class="row">

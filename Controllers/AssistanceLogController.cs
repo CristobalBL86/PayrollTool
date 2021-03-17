@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PayrollTool.Context;
 using PayrollTool.Models;
+using static PayrollTool.Helper;
 
 namespace PayrollTool.Controllers
 {
@@ -20,11 +21,12 @@ namespace PayrollTool.Controllers
         }
 
         // GET: AssistanceLog
+        [NoDirectAccessAttribute]
         public async Task<IActionResult> Index()
         {
             var payrollContext = _context.AssistanceLog
                 .Include(a => a.Employee)
-                .Where(a=> a.Date.Date == DateTime.Today);
+                .Where(a=> a.Date.Date >= DateTime.Today.AddDays(-14).Date);
             return View(await payrollContext.ToListAsync());
         }
 
@@ -32,7 +34,10 @@ namespace PayrollTool.Controllers
         // GET: AssistanceLog/Create
         public IActionResult Create()
         {
-            ViewData["EmployeeId"] = new SelectList(_context.Employee, "EmployeeId", "Name");
+            ViewData["EmployeeId"] = new SelectList(
+                _context.Employee
+                    .Where(e=> !_context.AssistanceLog.Any(a=> a.EmployeeId == e.EmployeeId && a.Date.Date == DateTime.Today.Date)),
+                "EmployeeId", "Name");
             return View(new AssistanceLog() { Date = DateTime.Now});
         }
 
@@ -41,15 +46,27 @@ namespace PayrollTool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AssistanceLogId,Date,EmployeeId")] AssistanceLog assistanceLog)
         {
-            if (ModelState.IsValid)
+            try
             {
-                //assistanceLog.Date = DateTime.Now;
-                _context.Add(assistanceLog);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    assistanceLog.Date = assistanceLog.Date.Date;
+                    _context.Add(assistanceLog);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["EmployeeId"] = new SelectList(_context.Employee, "EmployeeId", "Name", assistanceLog.EmployeeId);
+                return View(assistanceLog);
             }
-            ViewData["EmployeeId"] = new SelectList(_context.Employee, "EmployeeId", "Name", assistanceLog.EmployeeId);
-            return View(assistanceLog);
+            catch (Exception ex) {
+                ViewBag.ErrorMessage = ex.InnerException.Message.ToString();
+
+                var payrollContext = _context.AssistanceLog
+                .Include(a => a.Employee)
+                .Where(a => a.Date.Date >= DateTime.Today.AddDays(-14).Date);
+
+                return View(nameof(Index), await payrollContext.ToListAsync());
+            }
         }
 
         // GET: AssistanceLog/Delete/5

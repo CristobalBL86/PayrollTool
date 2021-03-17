@@ -4,63 +4,80 @@
     ViewData["Title"] = "Index";
 }
 
-@*<p>
-        <a asp-action="Create">Create New</a>
-    </p>*@
 
-<div class="col-md-8 offset-md-2">
-    <h1 class="text-center"><i class="fas fa-user-check text-success"></i> Assistance</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Employee)
-                </th>
-                <th>
-                    <a onclick="showPopUpAssistance('@Url.Action("Create","AssistanceLog", null, Context.Request.Scheme)','Check Assistance')" class="btn btn-success text-white"><i class="fas calendar-check"></i> Check Assistance</a>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
+    <div class="col-md-8 offset-md-2">
+        <h1 class="text-center"><i class="fas fa-user-check text-success"></i> Assistance</h1>
+        @{
+
+            if (@ViewBag.ErrorMessage != null)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Employee.Name)
-                    </td>
-                    <td>
-                        @*<a asp-action="Delete" asp-route-id="@item.AssistanceLogId">Delete</a>*@
-                        <form asp-action="Delete" asp-route-id="@item.AssistanceLogId" class="d-inline" onsubmit="return deleteAssistance()">
-                            <input type="hidden" asp-for="@item.AssistanceLogId" />
-                            <input type="submit" value="Delete" class="btn btn-danger" />
-                            @*<a asp-action="Index">Back to List</a>*@
-                        </form>
-                    </td>
-                </tr>
+                <a style="color:red">@ViewBag.ErrorMessage</a>
             }
-        </tbody>
-    </table>
+        }
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Employee)
+                    </th>
+                    <th>
+                        <a onclick="showPopUpAssistance('@Url.Action("Create","AssistanceLog", null, Context.Request.Scheme)','Check Assistance')" class="btn btn-success text-white"><i class="fas calendar-check"></i> Check Assistance</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Employee.Name)
+                        </td>
+                        <td>
+                            @*<a asp-action="Delete" asp-route-id="@item.AssistanceLogId">Delete</a>*@
+                            <form asp-action="Delete" asp-route-id="@item.AssistanceLogId" class="d-inline" onsubmit="return deleteAssistance()">
+                                <input type="hidden" asp-for="@item.AssistanceLogId" />
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                                @*<a asp-action="Index">Back to List</a>*@
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-    <div class="modal" tabindex="-1" role="dialog" id="pop_assistance">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+        <div class="modal" tabindex="-1" role="dialog" id="pop_assistance">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
 
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+@section scripts{ 
+
+    <script>
+
+        $(function () {
+            $("#mnuAssitance").removeAttr('hidden');
+            $("#mnuTrx").removeAttr('hidden');
+            $("#mnuPayroll").removeAttr('hidden');
+        });
+
+    </script>
+}

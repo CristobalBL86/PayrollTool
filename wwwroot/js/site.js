@@ -184,4 +184,6 @@ popSubmitPayroll = form => {
 function cleanScreen(){
     $('#btnRelease').hide();
     $('#view-payroll').html('')
+
+    $.notify('Payroll file has been generated, exporting in process!', { globalPosition: 'top center', className: 'success' });
 }

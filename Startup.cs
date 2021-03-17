@@ -56,7 +56,7 @@ namespace PayrollTool
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=AssistanceLog}/{action=Index}/{id?}");
+                    pattern: "{controller=User}/{action=Index}/{id?}");
             });
         }
     }
