@@ -2,7 +2,7 @@
 Small module to handle employee payments based on daily transactions
 
 # Characteristics
-* Employee assitance
+* Employee assistance
 * Transactions history
 * Payroll Calculation
 * Export calculation to excel
